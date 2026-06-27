@@ -183,8 +183,14 @@ export async function setupMkcert() {
   const mkcertExecuteable = join(__dirname, ".cache", "bin", name);
   const sslDir = join(__dirname, ".cache", "ssl");
 
-  if (!existsSync(sslDir)) mkdirSync(sslDir, { recursive: true });
-  else return;
+  const certFile = join(sslDir, `_wildcard.growserver.app.pem`);
+  const keyFile = join(sslDir, `_wildcard.growserver.app-key.pem`);
+
+  if (!existsSync(sslDir)) {
+    mkdirSync(sslDir, { recursive: true });
+  } else if (existsSync(certFile) && existsSync(keyFile)) {
+    return;
+  }
 
   logger.info("Setup mkcert certificate");
   try {
