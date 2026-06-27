@@ -3,7 +3,7 @@ development = true
 address = "testing-nuke.gl.at.ply.gg"
 port = 443
 ports = [53422]
-loginUrl = "truffle-housewives.with.playit.plus:1148"
+loginUrl = "login.growserver.app:1148"
 cdnUrl = "http://truffle-laughing.with.playit.plus:1149"
 
 [web.maintenance]
