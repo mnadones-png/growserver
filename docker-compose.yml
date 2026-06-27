@@ -16,8 +16,8 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - JWT_SECRET=${JWT_SECRET}
+      - DATABASE_URL=postgresql://growserver:ilovereimu@db:5432/growserver
+      - JWT_SECRET=4f7b2c9a1d8e6f3a0b5c8d7e1f4a9b6c3d0e2f5a8b7c9d0e1f3a2b4c5d6e7f8a
       - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
       - NODE_ENV=development
   db:
