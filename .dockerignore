@@ -38,5 +38,4 @@ lerna-debug.log*
 *.sln
 *.sw?
 
-items_info_new.json
 .vs/
