@@ -1,7 +1,7 @@
 import postgres from "postgres";
 
 async function main() {
-  const dbUrl = process.env.DATABASE_URL || "postgresql://growserver:ilovereimu@db:5432/growserver";
+  const dbUrl = process.env.DATABASE_URL || "postgresql://growserver:ilovereimu@127.0.0.1:5433/growserver";
   const sql = postgres(dbUrl);
   try {
     console.log("Dropping tables to prevent drizzle-kit interactive prompts...");

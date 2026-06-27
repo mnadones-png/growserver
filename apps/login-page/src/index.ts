@@ -199,11 +199,11 @@ async function init() {
       },
     );
 
-    // Start a plain HTTP CDN server on port 8081
+    // Start a plain HTTP CDN server on port 8084
     serve(
       {
         fetch: app.fetch,
-        port: 8081,
+        port: 8084,
         hostname: "0.0.0.0",
       },
       (info) => {

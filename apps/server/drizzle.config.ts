@@ -5,7 +5,7 @@ config({
   path: "../../.env",
 });
 
-const dbUrl = process.env.DATABASE_URL || "postgresql://growserver:ilovereimu@db:5432/growserver";
+const dbUrl = process.env.DATABASE_URL || "postgresql://growserver:ilovereimu@127.0.0.1:5433/growserver";
 
 export default defineConfig({
   dialect: "postgresql",
