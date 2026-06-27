@@ -43,12 +43,21 @@ const configPath = join(__dirname, "config.toml");
 const configContent = readFileSync(configPath, "utf-8");
 const config = parse(configContent) as unknown as Config;
 const frontend = () => {
-  return {
-    tls: {
-      key: readFileSync(config.webFrontend.tls.key),
-      cert: readFileSync(config.webFrontend.tls.cert),
-    },
-  };
+  try {
+    return {
+      tls: {
+        key: readFileSync(config.webFrontend.tls.key),
+        cert: readFileSync(config.webFrontend.tls.cert),
+      },
+    };
+  } catch {
+    return {
+      tls: {
+        key: Buffer.alloc(0),
+        cert: Buffer.alloc(0),
+      },
+    };
+  }
 };
 const logon = () => {
   return {
