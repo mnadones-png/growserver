@@ -5,12 +5,14 @@ config({
   path: "../../.env",
 });
 
+const dbUrl = process.env.DATABASE_URL || "postgresql://growserver:ilovereimu@db:5432/growserver";
+
 export default defineConfig({
   dialect: "postgresql",
   schema: ["./shared/schemas/index.ts"],
   out: "./drizzle",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    url: dbUrl,
   },
   strict: false,
   verbose: false,

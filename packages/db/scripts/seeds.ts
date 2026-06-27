@@ -21,7 +21,8 @@ async function hash(password: string) {
 }
 
 export async function setupSeeds() {
-  const connection = postgres(process.env.DATABASE_URL!);
+  const dbUrl = process.env.DATABASE_URL || "postgresql://growserver:ilovereimu@db:5432/growserver";
+  const connection = postgres(dbUrl);
   const db = drizzle(connection);
   const dateNow = new Date().toISOString().slice(0, 19).replace("T", " ");
 
