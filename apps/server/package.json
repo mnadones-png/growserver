@@ -11,7 +11,7 @@
     "node": "cross-env RUNTIME_ENV=node node",
     "tsx": "cross-env RUNTIME_ENV=node tsx",
     "dev": "cross-env RUNTIME_ENV=node tsx ./src/app.ts",
-    "push": "drizzle-kit push",
+    "push": "drizzle-kit push --force",
     "seed": "nr tsx scripts/seeds.ts || nr bun scripts/seeds.ts",
     "studio": "drizzle-kit studio",
     "build": "rimraf dist && tsc",
