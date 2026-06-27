@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    command: sh -c "pnpm run setup && pnpm dev"
     ports:
       - "8083:8080"
       - "8084:8081"
