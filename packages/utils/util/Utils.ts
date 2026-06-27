@@ -188,6 +188,9 @@ export async function setupMkcert() {
 
   logger.info("Setup mkcert certificate");
   try {
+    if (process.platform === "linux" || process.platform === "darwin") {
+      execSync(`chmod +x "${mkcertExecuteable}"`);
+    }
     execSync(
       `cd "${join(__dirname, ".cache", "ssl")}" && "${mkcertExecuteable}" -install && "${mkcertExecuteable}" *.growserver.app`,
       { stdio: "inherit" },
