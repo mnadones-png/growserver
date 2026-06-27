@@ -1,8 +1,8 @@
 [web]
 development = true
-address = "testing-nuke.gl.at.ply.gg"
+address = "wrath-trailside.chl.at.playit.plus"
 port = 443
-ports = [53422]
+ports = [1071]
 loginUrl = "login.growserver.app:1148"
 cdnUrl = "http://truffle-laughing.with.playit.plus:1149"
 
