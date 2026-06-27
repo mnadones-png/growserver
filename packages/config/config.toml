@@ -3,8 +3,8 @@ development = true
 address = "testing-nuke.gl.at.ply.gg"
 port = 443
 ports = [53422]
-loginUrl = "grow.cenitdigital.cl"
-cdnUrl = "http://cdn.cenitdigital.cl"
+loginUrl = "truffle-housewives.with.playit.plus:1148"
+cdnUrl = "http://truffle-laughing.with.playit.plus:1149"
 
 [web.maintenance]
 enable = false
