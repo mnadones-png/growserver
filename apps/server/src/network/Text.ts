@@ -25,13 +25,15 @@ export class ITextPacket {
   public async execute() {
     if (this.obj.action) return;
 
-    logger.debug(`[DEBUG] Receive text packet:\n ${this.obj}`);
+    logger.debug(`[DEBUG] Receive text packet:\n ${JSON.stringify(this.obj, null, 2)}`);
 
     await this.checkVersion();
     if (this.obj.ltoken) await this.validateLtoken();
 
     if (this.obj.tankIDName && this.obj.tankIDPass) {
       await this.validateRefreshToken();
+    } else if (this.obj.user && this.obj.token) {
+      await this.validateTicketLogin();
     }
   }
 
@@ -189,6 +191,105 @@ export class ITextPacket {
 
       this.sendSuperMain();
       this.peer.send(Variant.from("SetHasGrowID", 1, player.name, password));
+
+      const defaultInventory = {
+        max:   32,
+        items: [
+          {
+            id:     18, // Fist
+            amount: 1,
+          },
+          {
+            id:     32, // Wrench
+            amount: 1,
+          },
+        ],
+      };
+
+      const defaultClothing = {
+        hair:     0,
+        shirt:    0,
+        pants:    0,
+        feet:     0,
+        face:     0,
+        hand:     0,
+        back:     0,
+        mask:     0,
+        necklace: 0,
+        ances:    0,
+      };
+
+      this.peer.data.name = player.name;
+      this.peer.data.displayName = player.display_name;
+      this.peer.data.rotatedLeft = false;
+      this.peer.data.country = this.obj.country as string;
+      this.peer.data.platformID = this.obj.platformID as string;
+      this.peer.data.userID = player.id;
+      this.peer.data.role = player.role;
+      this.peer.data.inventory = player.inventory?.length
+        ? JSON.parse(player.inventory.toString())
+        : defaultInventory;
+      this.peer.data.clothing = player.clothing?.length
+        ? JSON.parse(player.clothing.toString())
+        : defaultClothing;
+      this.peer.data.gems = player.gems ? player.gems : 0;
+      this.peer.data.world = "EXIT";
+      this.peer.data.level = player.level ? player.level : 0;
+      this.peer.data.exp = player.exp ? player.exp : 0;
+      this.peer.data.lastVisitedWorlds = player.last_visited_worlds
+        ? JSON.parse(player.last_visited_worlds.toString())
+        : [];
+      this.peer.data.heartMonitors = new Map<string, Array<number>>(
+        Object.entries(JSON.parse(player.heart_monitors.toString())),
+      );
+
+      this.peer.data.state = {
+        mod:             0,
+        canWalkInBlocks: false,
+        modsEffect:      0,
+        isGhost:         false,
+        lava:            {
+          damage:       0,
+          resetStateAt: 0,
+        },
+      };
+
+      // Load Gems
+      this.peer.setGems(this.peer.data.gems);
+
+      this.peer.saveToCache();
+      this.peer.saveToDatabase();
+    } catch (e) {
+      logger.error(e);
+      return await this.invalidInfoResponse();
+    }
+  }
+
+  private async validateTicketLogin() {
+    try {
+      const userId = parseInt(this.obj.user as string);
+
+      const player = await this.base.database.players.getByUID(userId);
+      if (!player) throw new Error("Player not found");
+
+      const targetPeerId = this.base.cache.peers.find(
+        (v) => v.userID === player.id,
+      );
+      if (targetPeerId) {
+        const targetPeer = new Peer(this.base, targetPeerId.netID);
+        this.peer.send(
+          Variant.from(
+            "OnConsoleMessage",
+            "`4Already Logged In?`` It seems that this account already logged in by somebody else.",
+          ),
+        );
+
+        targetPeer.leaveWorld();
+        targetPeer.disconnect();
+      }
+
+      this.sendSuperMain();
+      this.peer.send(Variant.from("SetHasGrowID", 1, player.name, "password123"));
 
       const defaultInventory = {
         max:   32,

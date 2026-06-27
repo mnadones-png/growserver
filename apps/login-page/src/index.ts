@@ -43,6 +43,11 @@ async function init() {
           root: config.webFrontend.root,
         }),
   );
+  
+  app.get("/growtopia/*", (ctx) => {
+    logger.info(`Catch-all serving 200 OK for missing CDN file: ${ctx.req.path}`);
+    return ctx.body("", 200);
+  });
 
   app.get("/player/growid/login/validate", (ctx) => {
     try {
@@ -190,6 +195,17 @@ async function init() {
       },
       (info) => {
         logger.info(`Node Login Page Server is running on port ${info.port}`);
+      },
+    );
+
+    // Start a plain HTTP CDN server on port 8081
+    serve(
+      {
+        fetch: app.fetch,
+        port: 8081,
+      },
+      (info) => {
+        logger.info(`Plain HTTP CDN Server is running on port ${info.port}`);
       },
     );
   } else if (process.env.RUNTIME_ENV === "bun") {

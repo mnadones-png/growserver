@@ -287,11 +287,11 @@ export class Base {
     //   consola.error("Failed to load custom items: " + e);
     // }
 
-    await itemsDat.encode();
-
-    const bufData = Buffer.from(itemsDat.buffer.data);
-    const hash = RTTEX.hash(bufData);
-    this.items.content = bufData;
+    const rawBuf = await readFile(
+      join(__dirname, ".cache", "growtopia", "dat", this.cdn.itemsDatName),
+    );
+    const hash = RTTEX.hash(rawBuf);
+    this.items.content = rawBuf;
     this.items.hash = `${hash}`;
     this.items.metadata = itemsDat.meta;
 
@@ -306,24 +306,39 @@ export class Base {
   }
 
   public async getLatestCdn() {
+    let cdnData: CDNContent | null = null;
     try {
-      const cdnData = (await fetchJSON(
+      cdnData = (await fetchJSON(
         "https://mari-project.jad.li/api/v1/growtopia/cache/latest",
       )) as CDNContent;
+    } catch (e) {
+      logger.error(`Failed to get latest CDN from mari-project API: ${e}`);
+    }
+
+    try {
       const itemsDat = (await fetchJSON(ITEMS_DAT_FETCH_URL)) as {
         content: string;
       };
 
+      const itemsDatName = itemsDat.content || "items-v5.47.dat";
+      const match = itemsDatName.match(/items-v(\d+\.\d+)\.dat/);
+      const version = cdnData?.version || (match ? match[1] : "5.47");
+      const uri = cdnData?.uri || `growtopia/${version.replace(".", "")}/macos/Growtopia.pkg`;
+
       const data: CDNContent = {
-        version:      cdnData.version,
-        uri:          cdnData.uri,
-        itemsDatName: itemsDat.content,
+        version,
+        uri,
+        itemsDatName,
       };
 
       return data;
     } catch (e) {
       logger.error(`Failed to get latest CDN: ${e}`);
-      return { version: "", uri: "", itemsDatName: "" };
+      return {
+        version:      "5.47",
+        uri:          "growtopia/547/macos/Growtopia.pkg",
+        itemsDatName: "items-v5.47.dat",
+      };
     }
   }
 

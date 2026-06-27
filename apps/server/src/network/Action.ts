@@ -17,7 +17,7 @@ export class IActionPacket {
 
   public async execute() {
     if (!this.obj.action) return;
-    logger.debug(`Receive action packet:\n ${this.obj}`);
+    logger.debug(`Receive action packet:\n ${JSON.stringify(this.obj, null, 2)}`);
 
     const actionType = this.obj.action;
 

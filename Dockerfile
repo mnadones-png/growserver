@@ -19,6 +19,7 @@ RUN pnpm install --frozen-lockfile
 
 EXPOSE 80/tcp
 EXPOSE 8080/tcp
+EXPOSE 8081/tcp
 EXPOSE 443/tcp
 EXPOSE 17091/udp
 
