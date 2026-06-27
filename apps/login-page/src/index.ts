@@ -186,11 +186,6 @@ async function init() {
     serve(
       {
         fetch: app.fetch,
-        createServer,
-        serverOptions: {
-          key: fe.tls.key,
-          cert: fe.tls.cert,
-        },
         port: config.webFrontend.port,
       },
       (info) => {
