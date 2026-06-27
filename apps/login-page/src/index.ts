@@ -187,6 +187,7 @@ async function init() {
       {
         fetch: app.fetch,
         port: config.webFrontend.port,
+        hostname: "0.0.0.0",
       },
       (info) => {
         logger.info(`Node Login Page Server is running on port ${info.port}`);
@@ -198,6 +199,7 @@ async function init() {
       {
         fetch: app.fetch,
         port: 8081,
+        hostname: "0.0.0.0",
       },
       (info) => {
         logger.info(`Plain HTTP CDN Server is running on port ${info.port}`);
