@@ -12,6 +12,8 @@ services:
     depends_on:
       - db
       - redis
+    env_file:
+      - .env
     environment:
       - NODE_ENV=development
   db:
